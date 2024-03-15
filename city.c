@@ -139,7 +139,7 @@ static uint64 HashLen0to16(const char *s, size_t len) {
   if (len > 8) {
     uint64 a = Fetch64(s);
     uint64 b = Fetch64(s + len - 8);
-    return HashLen16(a, RotateByAtLeast1(b + len, len)) ^ b;
+    return HashLen16(a, RotateByAtLeast1(b + len, (int)len)) ^ b;
   }
   if (len >= 4) {
     uint64 a = Fetch32(s);
@@ -150,7 +150,7 @@ static uint64 HashLen0to16(const char *s, size_t len) {
     uint8 b = s[len >> 1];
     uint8 c = s[len - 1];
     uint32 y = (uint32)(a) + ((uint32)(b) << 8);
-    uint32 z = len + ((uint32)(c) << 2);
+    uint32 z = (uint32)(len + (uint32)((uint32)(c) << 2));
     return ShiftMix(y * k2 ^ z * k3) * k2;
   }
   return k2;
@@ -278,7 +278,7 @@ static uint128 CityMurmur(const char *s, size_t len, uint128 seed) {
   uint64 b = Uint128High64(seed);
   uint64 c = 0;
   uint64 d = 0;
-  signed long l = len - 16;
+  signed long l = (signed long)(len - 16);
   if (l <= 0) {  // len <= 16
     a = ShiftMix(a * k1) * k1;
     c = b * k1 + HashLen0to16(s, len);
