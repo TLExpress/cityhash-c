@@ -150,7 +150,10 @@ static uint64 HashLen0to16(const char *s, size_t len) {
     uint8 b = s[len >> 1];
     uint8 c = s[len - 1];
     uint32 y = (uint32)(a) + ((uint32)(b) << 8);
-    uint32 z = (uint32)(len + static_cast<uint32>((uint32)(c) << 2));
+#pragma warning(push)
+#pragma warning( disable : 4101) 
+    uint32 z = (uint32)(len + ((uint32)(c) << 2));
+#pragma warning( pop )
     return ShiftMix(y * k2 ^ z * k3) * k2;
   }
   return k2;
